@@ -88,7 +88,7 @@ The AA+ framework, written in C++ by PJ Naughter (Visual C++ MVP) is certainly t
 
 Pull requests are accepted only about the C(++) and Swift code. The AA+ code changes must be directed (as I will personnaly do if I need to) to the original source (see the [AA+ website](http://www.naughter.com/aa.html)).
 
-Today's version of AA+ used in SwiftAA is 2.50 (released 16 April 2023). 
+Today's version of AA+ used in SwiftAA is 2.63 (released 16 May 2025). 
 
 
 Caution on Coordinates
