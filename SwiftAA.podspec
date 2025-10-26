@@ -1,5 +1,4 @@
 Pod::Spec.new do |s|
-
   s.name         = "SwiftAA"
   s.version      = "2.5.0"
   s.summary      = "The most comprehensive and accurate collection of astronomical algorithms in Swift."
@@ -8,28 +7,45 @@ Pod::Spec.new do |s|
 SwiftAA aims at providing the most comprehensive collection of accurate astronomical algorithms in Swift.
 That is, based on the reference textbook "Astronomical Algorithms" by Jean Meeus, SwiftAA provides modern
 APIs about all things astronomical. It is based on the C++ layer developed since many years by J.P. Naughter.
-SwiftAA is built upon this C++ layer, on top of which modern and expressive API is crafted. It is also a lote
-more covered by Unit Tests, in order to become the most reliable source of astronomical computations.
-                   DESC
+SwiftAA is built upon this C++ layer, on top of which a modern and expressive API is crafted. It is also
+heavily covered by unit tests, in order to become the most reliable source of astronomical computations.
+  DESC
 
-  s.homepage     = "https://www.onekiloparsec.dev/swiftaa"
+  s.homepage     = "https://onekiloparsec.dev"
   s.license      = { :type => "MIT", :file => "LICENSE" }
+  s.author       = { "Cédric Foellmi" => "cedric@onekiloparsec.dev" }
 
-  s.author             = { "onekiloparsec (a.k.a. Cédric Foellmi)" => "cedric@onekiloparsec.dev" }
-  s.social_media_url   = "https://twitter.com/onekiloparsec"
-
-  #  When using multiple platforms
-  s.ios.deployment_target = "13.0"
-  s.osx.deployment_target = "10.15"
+  # --- Deployment targets ---
+  s.ios.deployment_target     = "13.0"
+  s.osx.deployment_target     = "10.15"
   s.watchos.deployment_target = "7.0"
-  s.tvos.deployment_target = "12.0"
 
-  s.source       = { :git => "https://github.com/onekiloparsec/SwiftAA.git", :tag => "#{s.version}" }
+  # --- Source ---
+  s.source = {
+    :git => "https://github.com/onekiloparsec/SwiftAA.git",
+    :branch => "master"
+  }
 
-  s.framework    = "Foundation"
-  s.swift_version = "5"
+  # --- Language & framework ---
+  s.framework      = "Foundation"
+  s.swift_versions = ["5.0"]
 
-  s.source_files  = "Sources", "Sources/SwiftAA/*.swift"
-  s.dependency 'AABridge', '~> 2.5.0'
+  # --- Source files ---
+  s.source_files = [
+    "Sources/SwiftAA/**/*.swift",
+    "Sources/AABridge/**/*.{h,cpp}"
+  ]
+  s.exclude_files = [
+    "Sources/SwiftAA/**/SwiftAA.playground/**/*",
+    "Sources/SwiftAA/**/Tests/**/*"
+  ]
 
+  # --- Compiler & linking options ---
+  s.pod_target_xcconfig = {
+    "CLANG_CXX_LANGUAGE_STANDARD" => "c++17",
+    "CLANG_CXX_LIBRARY" => "libc++",
+    "OTHER_LDFLAGS" => "-lc++"
+  }
+
+  s.library = "c++"
 end
