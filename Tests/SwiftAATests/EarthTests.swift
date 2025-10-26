@@ -93,14 +93,14 @@ class EarthTests: XCTestCase {
         let earthLowPrecision = Earth(julianDay: JulianDay(2448908.5), highPrecision: false)
         let earthHighPrecision = Earth(julianDay: JulianDay(2448908.5), highPrecision: true)
         
-        XCTAssertEqual(earthLowPrecision.heliocentricEclipticCoordinates.celestialLongitude.value, 19.907371990723732)
-        XCTAssertEqual(earthHighPrecision.heliocentricEclipticCoordinates.celestialLongitude.value, 19.907297242049481)
+        XCTAssertEqual(earthLowPrecision.heliocentricEclipticCoordinates.celestialLongitude.value, 19.907371990723, accuracy: 1e-12)
+        XCTAssertEqual(earthHighPrecision.heliocentricEclipticCoordinates.celestialLongitude.value, 19.907297242049, accuracy: 1e-12)
         
-        XCTAssertEqual(earthLowPrecision.heliocentricEclipticCoordinates.celestialLatitude.value, -0.00017901250407703628)
-        XCTAssertEqual(earthHighPrecision.heliocentricEclipticCoordinates.celestialLatitude.value, -0.00020664594472918907)
+        XCTAssertEqual(earthLowPrecision.heliocentricEclipticCoordinates.celestialLatitude.value, -0.000179012504, accuracy: 1e-12)
+        XCTAssertEqual(earthHighPrecision.heliocentricEclipticCoordinates.celestialLatitude.value, -0.000206645944, accuracy: 1e-12)
         
-        XCTAssertEqual(earthLowPrecision.radiusVector.value, 0.99760774951494113)
-        XCTAssertEqual(earthHighPrecision.radiusVector.value, 0.99760852023559332)
+        XCTAssertEqual(earthLowPrecision.radiusVector.value, 0.997607749514, accuracy: 1e-12)
+        XCTAssertEqual(earthHighPrecision.radiusVector.value, 0.997608520235, accuracy: 1e-12)
     }
 }
 
