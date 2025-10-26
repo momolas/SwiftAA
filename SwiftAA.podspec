@@ -5,12 +5,11 @@ Pod::Spec.new do |s|
   s.summary      = "The most comprehensive and accurate collection of astronomical algorithms in Swift."
 
   s.description  = <<-DESC
-SwiftAA aims to provide the most comprehensive collection of accurate astronomical algorithms in Swift.
+SwiftAA aims at providing the most comprehensive collection of accurate astronomical algorithms in Swift.
 That is, based on the reference textbook "Astronomical Algorithms" by Jean Meeus, SwiftAA provides modern
 APIs about all things astronomical. It is based on the C++ layer developed since many years by J.P. Naughter.
-SwiftAA is built upon this C++ layer, with an intermediate C layer (respecting strictly the lower APIs),
-on top of which modern and expressive API is crafted. It is also a lote more covered by Unit Tests, in order
-to become the most reliable source of astronomical computations.
+SwiftAA is built upon this C++ layer, on top of which modern and expressive API is crafted. It is also a lote
+more covered by Unit Tests, in order to become the most reliable source of astronomical computations.
                    DESC
 
   s.homepage     = "https://www.onekiloparsec.dev/swiftaa"
