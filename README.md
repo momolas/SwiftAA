@@ -59,7 +59,9 @@ Using the [Swift Package Manager](https://swift.org/package-manager/): either th
 
 ~~Using [Carthage](https://github.com/Carthage/Carthage): add `github "onekiloparsec/SwiftAA"` to your `Cartfile`, then run `carthage update`, and finally add the newly built `SwiftAA-macOS.framework` or `SwiftAA-iOS.framework` into your project (in `embedded binaries`).~~
 
-Using [CocoaPods](http://cocoapods.org/): add `pod 'SwiftAA'` to your `Podfile` and then run `pod update`. 
+~~Using [CocoaPods](http://cocoapods.org/): add `pod 'SwiftAA'` to your `Podfile` and then run `pod update`.~~
+
+Publishing a pod has always been a enormous pain as a developer. It is still today. I find it obsolete since a very long time. Sorry, but loosing even just one hour trying to lint the podspec is already too much. Installing 10GB+ of iOS simulators just for it is out of question. So for now, the lib is available with the SPM only.  
 
 
 
