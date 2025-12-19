@@ -1,14 +1,14 @@
-// swift-tools-version:5.9
+// swift-tools-version:5.10
 import PackageDescription
 
 let package = Package(
     name: "SwiftAA",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v10_15),
-        .iOS(.v13),
-        .tvOS(.v12),
-        .watchOS(.v7)
+        .macOS(.v14),
+        .iOS(.v17),
+        .tvOS(.v17),
+        .watchOS(.v10)
     ],
     products: [
         // The C++ astronomical algorithms library by J.P. Naughter
