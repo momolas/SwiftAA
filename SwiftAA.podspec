@@ -16,9 +16,10 @@ heavily covered by unit tests, in order to become the most reliable source of as
   s.author       = { "Cédric Foellmi" => "cedric@onekiloparsec.dev" }
 
   # --- Deployment targets ---
-  s.ios.deployment_target     = "13.0"
-  s.osx.deployment_target     = "10.15"
-  s.watchos.deployment_target = "7.0"
+  s.ios.deployment_target     = "17.0"
+  s.osx.deployment_target     = "14.0"
+  s.watchos.deployment_target = "10.0"
+  s.tvos.deployment_target    = "17.0"
 
   # --- Source ---
   s.source = {
@@ -28,7 +29,7 @@ heavily covered by unit tests, in order to become the most reliable source of as
 
   # --- Language & framework ---
   s.framework      = "Foundation"
-  s.swift_versions = ["5.0"]
+  s.swift_versions = ["5.10"]
 
   # --- Source files ---
   s.source_files = [
