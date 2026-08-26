@@ -7,91 +7,69 @@
 SwiftAA
 ============
 
-![](https://img.shields.io/badge/Swift-5-blue.svg?style=flat)
-![](https://img.shields.io/badge/platform-ios-lightgrey.svg)
-![](https://img.shields.io/badge/platform-osx-lightgrey.svg)
-![](https://img.shields.io/badge/platform-linux-lightgrey.svg)
+![](https://img.shields.io/badge/Swift-5.9%20%7C%206.0-blue.svg?style=flat)
+![](https://img.shields.io/badge/platform-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos%20%7C%20linux-lightgrey.svg)
 ![](https://img.shields.io/badge/licence-MIT-blue.svg)
-[![Travis](https://img.shields.io/travis/onekiloparsec/SwiftAA.svg)](https://travis-ci.org/onekiloparsec/SwiftAA/)
-[![Codecov](https://img.shields.io/codecov/c/github/onekiloparsec/SwiftAA.svg)](https://codecov.io/gh/onekiloparsec/SwiftAA)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fonekiloparsec%2FSwiftAA.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fonekiloparsec%2FSwiftAA?ref=badge_shield)
+[![CI](https://github.com/onekiloparsec/SwiftAA/actions/workflows/ci.yml/badge.svg)](https://github.com/onekiloparsec/SwiftAA/actions/workflows/ci.yml)
 
-*The most comprehensive collection of accurate astronomical algorithms in Swift.* 
+*The most comprehensive collection of accurate astronomical algorithms in modern Swift.* 
 
-Other implementations: [C# (AASharp)](https://github.com/jsauve/AASharp), and [JavaScript (aa-js)](https://github.com/onekiloparsec/aa-js), which has sligthly different APIs (not covering all the original AA, but with additional useful things).
+Other implementations: [C# (AASharp)](https://github.com/jsauve/AASharp), and [JavaScript (aa-js)](https://github.com/onekiloparsec/aa-js).
 
 Description
 =======
 
-SwiftAA provides everything you need to build our Solar System, compute length of seasons, moon phases, determine rise, transit and set times, get positions of large planetary moons, transform coordinates, determine physical details of planets, their illumination, distance etc. With a professional-grade accuracy.
+SwiftAA provides everything you need to build our Solar System, compute length of seasons, moon phases, determine rise, transit and set times, get positions of planetary moons, transform coordinates, determine physical details of planets, their illumination, distance, etc., with professional-grade accuracy.
 
-**SwiftAA is already used in production apps.** In particular, the apps by [Vaonis](https://vaonis.com) who make amazing smart telescopes. But also mobile apps such as
-[MeteorActive](https://itunes.apple.com/us/app/meteoractive/id1205712190?mt=8), a carefully crafted iOS app to get
-everything about meteors.
+**SwiftAA is used in production apps**, including apps by [Vaonis](https://vaonis.com) (creators of smart telescopes like Stellina and Vespera) and [MeteorActive](https://itunes.apple.com/us/app/meteoractive/id1205712190?mt=8).
 
-SwiftAA is first built with a C(++) layer atop the C++ implementation by P.J. Naughter of the reference textbook
-*Astronomical Algorithms*, by Jean Meeus (2nd ed., [Amazon](https://www.amazon.com/Astronomical-Algorithms-Jean-Meeus/dp/0943396611/ref=sr_1_1?ie=UTF8&qid=1506016222&sr=8-1&keywords=astronomical+algorithms+jean+meeus)). This C++ package is called **AA+** (see below). AA+ also includes additional algorithms of the
-[VSOP87](https://en.wikipedia.org/wiki/VSOP_(planets)) framework, and includes the complete support for the ELP/MPP02 theory. 
-Thus, SwiftAA, thanks to AA+, is the most complete and accurate collection of algorithms for all things astronomical in Swift.
+### Architecture & Direct C++ Interoperability
 
-But **SwiftAA provides more modern and a lot more readable APIs**, taking advantage of the expressiveness of Swift and its various syntax elements, making it fun and easy of use. In fact, you simply can't use AA+ without having the AA book. While SwiftAA is precisely made to be accessible by anyone. Additional functions and algorithms are added to improve even more  the completeness and ease of use. In particular, **SwiftAA provides units safety** a lot stronger compared to C++ APIs. 
+SwiftAA directly leverages **Swift 5.9+ C++ Interoperability (`.interoperabilityMode(.Cxx)`)** atop **AA+ v2.63**, the C++ implementation by P.J. Naughter of the reference textbook *Astronomical Algorithms* by Jean Meeus (2nd ed.). 
 
-Moreover, **SwiftAA has a much larger unit tests coverage** (>90% for the Swift code!). In fact, unit tests are being carefully written with data directly taken from Jean Meeus' textbook, AA+ own tests, [USNO](http://www.usno.navy.mil), [SkySafari](https://skysafariastronomy.com) and [Xephem](http://www.clearskyinstitute.com/xephem/) (and thus trying to achieve a probably hypothetical consistency between these sources).
-
+- **Zero-cost bridge**: No Objective-C or C wrapper layer (`AABridge` eliminated). Swift calls AA+ C++ methods directly with zero runtime overhead.
+- **Swift 6 & Concurrency ready**: Built with strict concurrency checking support.
+- **Strong Unit Safety**: Type-safe structures for `Degree`, `ArcSecond`, `Hour`, `JulianDay`, `AstronomicalUnit`, etc.
+- **High Test Coverage**: Extensive test suite using both `XCTest` and modern `Swift-Testing` (`@Test`, `@Suite`).
 
 Documentation
 =======
 
-The documentation generated from the code itself is available at [http://onekiloparsec.github.io/SwiftAA](http://onekiloparsec.github.io/SwiftAA).
+SwiftAA includes full **Apple DocC** documentation. You can generate and preview documentation locally via:
 
+```bash
+swift package --disable-sandbox preview-documentation --target SwiftAA
+```
 
+Or generate the static documentation catalog:
+
+```bash
+swift package generate-documentation --target SwiftAA
+```
 
 Installation
 ============
 
-Using the [Swift Package Manager](https://swift.org/package-manager/): either through Xcode > File > Swift Packages > Add Package Dependency... and enter this repo URL (including the `.git` extension), , then choose `SwiftAA` target. Or add the line  `.package(url: "https://github.com/onekiloparsec/SwiftAA.git", from: "3.0.1")` in the `dependencies` section of your `Package.swift` file.
+Add SwiftAA as a dependency in your `Package.swift`:
 
-~~Using [Carthage](https://github.com/Carthage/Carthage): add `github "onekiloparsec/SwiftAA"` to your `Cartfile`, then run `carthage update`, and finally add the newly built `SwiftAA-macOS.framework` or `SwiftAA-iOS.framework` into your project (in `embedded binaries`).~~
+```swift
+dependencies: [
+    .package(url: "https://github.com/onekiloparsec/SwiftAA.git", from: "3.0.1")
+]
+```
 
-~~Using [CocoaPods](http://cocoapods.org/): add `pod 'SwiftAA'` to your `Podfile` and then run `pod update`.~~
+Or add it directly in Xcode via **File > Add Package Dependencies...** and search for `SwiftAA`.
 
-Publishing a pod has always been a enormous pain as a developer. It is still today. I find it obsolete since a very long time. Sorry, but loosing even just one hour trying to lint the podspec is already too much. Installing 10GB+ of iOS simulators just for it is out of question. So for now, the lib is available with the SPM only.  
-
-
-
-Notes
-============
-
-AABridge
+AA+ Core
 ---
+The AA+ framework, written in C++ by PJ Naughter (Visual C++ MVP), is the comprehensive implementation of the algorithms in Jean Meeus' textbook. 
 
-The `AABridge` library is simply a bridge between the C++ codebase provided by `AA+` and the Swift code in `SwiftAA`. It's implemented entirely in C. It's recommended that you use either the `A++` C++ code directly or the `SwiftAA` Swift wrapper.
-
-For a long time, all the C++, (Objective-)C(++) and Swift code was bundled together. But in order to distribute SwiftAA through the SPM, it was necessary to split the sources into seperate folders. Then, three different libraries were declared in the `Package.swift` file and built separatedly, each of them depending on the previous one (`AA+`, then `AABridge`, and finally `SwiftAA`). 
-
-During that evolution, we chose to create a specific `AABridge` target inside the Xcode project. The consequence is that `AABridge` must be imported in `SwiftAA` source files that need it. Not a big deal, expect for Cocoapods which doesn't understand the subtelty. Hence, we created a specific `AABridge` pod, which will follow the versioning numbers of the main package.
-
-In summary, we have:
-
-* Three targets available through the Swift Package Manager: `AA+`, `AABridge` and `SwiftAA`. Embed only the last level you intend to use in your project.
-* Three targets available through Carthage, inside the Xcode project: `AABridge` (including `AA+`), `SwiftAA-iOS` and `SwiftAA-macOS`.
-* Two pods available through Cocoapods: `AABridge` and `SwiftAA`.
-
-
-AA+
----
-The AA+ framework, written in C++ by PJ Naughter (Visual C++ MVP) is certainly the best and most complete implementation of the "Astronomical Algorithms", found in the reference textbook by Jean Meeus. To make the most of this code specifically, you have to have a copy of the book with you (APIs and method names are hardly understandable without knowing what they refer to).
-
-Pull requests are accepted only about the C(++) and Swift code. The AA+ code changes must be directed (as I will personnaly do if I need to) to the original source (see the [AA+ website](http://www.naughter.com/aa.html)).
-
-Today's version of AA+ used in SwiftAA is 2.63 (released 16 May 2025). 
-
+SwiftAA integrates AA+ v2.63 directly as a C++ SPM module target (`AAplus`).
 
 Caution on Coordinates
 -----
 
-The coordinates computations are key for modern astronomy. However, there is no mention to modern conventions (like ICRS) in the textbook of Jean Meeus, therefore in the AA+ code. Awaiting for such improvement, any user wanting to compute coordinates transformations should be careful. For a good example of a complete implementation of such transformations, see the 
-[AstroPy excellent package](http://docs.astropy.org/en/stable/coordinates/index.html).
+Coordinates computations are key for modern astronomy. Note that classical Meeus algorithms are referenced to standard dynamical epochs (such as standard equinox FK5 J2000.0) rather than relativistic ICRS. For conversions requiring high-order relativistic stellar motions, refer also to packages like [AstroPy](http://docs.astropy.org/en/stable/coordinates/index.html).
 
 
 Prefixes & Conventions

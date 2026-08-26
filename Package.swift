@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version: 5.10
 import PackageDescription
 
 let package = Package(
@@ -37,6 +37,9 @@ let package = Package(
             dependencies: ["AAplus"],
             path: "Sources/SwiftAA",
             exclude: ["SwiftAA-Info.plist"],
+            resources: [
+                .process("SwiftAA.docc")
+            ],
             swiftSettings: [
                 .interoperabilityMode(.Cxx)
             ]
