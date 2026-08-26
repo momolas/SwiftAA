@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_exported import AAplus
 import AABridge
 
 /// The Sun.
@@ -14,17 +15,15 @@ public class Sun: Object, CelestialBody {
     
     /// Accessor to all values of the underlying physical details. Will probably become private
     /// once all relevant accessors are implemented and covered.
-    public fileprivate(set) lazy var physicalDetails: KPCAAPhysicalSunDetails = {
-        [unowned self] in
-        return KPCAAPhysicalSun_CalculateDetails(self.julianDay.value, self.highPrecision)
-        }()
+    public var physicalDetails: CAAPhysicalSunDetails {
+        return CAAPhysicalSun.Calculate(self.julianDay.value, self.highPrecision)
+    }
     
     /// Accessor to all values of the underlying eclipse details. Will probably become private
     /// once all relevant accessors are implemented and covered.
-    public fileprivate(set) lazy var eclipseDetails: KPCAASolarEclipseDetails = {
-        [unowned self] in
-        KPCAAEclipses_CalculateSolar(KPCAAMoonPhases_K(self.julianDay.date.fractionalYear))
-        }()
+    public var eclipseDetails: CAASolarEclipseDetails {
+        return CAAEclipses.CalculateSolar(CAAMoonPhases.K(self.julianDay.date.fractionalYear))
+    }
     
     /// The (constant) diameter of the Sun.
     public static let diameter: Meter = 1392000000.0
@@ -39,7 +38,7 @@ public class Sun: Object, CelestialBody {
     
     /// The apparent equatorial semi diameter of the sun.
     public var equatorialSemiDiameter: ArcSecond {
-        get { return ArcSecond(KPCAADiameters_SunSemidiameterA(self.radiusVector.value)) }
+        get { return ArcSecond(CAADiameters.SunSemidiameterA(self.radiusVector.value)) }
     }
     
     /// The apparent polar semi diameter of the sun
@@ -53,7 +52,7 @@ public class Sun: Object, CelestialBody {
     /// - Returns: The julian day of the next start
     public func nextStartOfTimeOfRotation() -> JulianDay {
         let C = ceil((self.julianDay.value - 2398140.2270)/27.2752316) // Equ 29.1 of AA.
-        return JulianDay(KPCAAPhysicalSun_TimeOfStartOfRotation(Int(C)))
+        return JulianDay(CAAPhysicalSun.TimeOfStartOfRotation(Int(C)))
     }
     
     // MARK: - Coordinates
@@ -63,16 +62,16 @@ public class Sun: Object, CelestialBody {
     
     /// The ecliptic coordinates of the Sun
     public var eclipticCoordinates: EclipticCoordinates {
-        get { return EclipticCoordinates(lambda: Degree(KPCAASun_GeometricEclipticLongitude(self.julianDay.value, self.highPrecision)),
-                                         beta: Degree(KPCAASun_GeometricEclipticLatitude(self.julianDay.value, self.highPrecision)),
+        get { return EclipticCoordinates(lambda: Degree(CAASun.GeometricEclipticLongitude(self.julianDay.value, self.highPrecision)),
+                                         beta: Degree(CAASun.GeometricEclipticLatitude(self.julianDay.value, self.highPrecision)),
                                          epoch: .epochOfTheDate(self.julianDay),
                                          equinox: .meanEquinoxOfTheDate(self.julianDay)) }
     }
 
     /// The apparent ecliptic coordinates of the Sun.
     public var apparentEclipticCoordinates: EclipticCoordinates {
-        get { return EclipticCoordinates(lambda: Degree(KPCAASun_ApparentEclipticLongitude(self.julianDay.value, self.highPrecision)),
-                                         beta: Degree(KPCAASun_ApparentEclipticLatitude(self.julianDay.value, self.highPrecision)),
+        get { return EclipticCoordinates(lambda: Degree(CAASun.ApparentEclipticLongitude(self.julianDay.value, self.highPrecision)),
+                                         beta: Degree(CAASun.ApparentEclipticLatitude(self.julianDay.value, self.highPrecision)),
                                          epoch: .epochOfTheDate(self.julianDay),
                                          equinox: .meanEquinoxOfTheDate(self.julianDay)) }
     }
@@ -93,8 +92,8 @@ public class Sun: Object, CelestialBody {
     /// referred to the standard equinox of J2000.0. Between 1900 and 2100, this can be performed with sufficient
     /// accuracy.
     public var eclipticCoordinatesStandardJ2000: EclipticCoordinates {
-        get { return EclipticCoordinates(lambda: Degree(KPCAASun_GeometricEclipticLongitudeJ2000(self.julianDay.value, self.highPrecision)),
-                                         beta: Degree(KPCAASun_GeometricEclipticLatitudeJ2000(self.julianDay.value, self.highPrecision))) }
+        get { return EclipticCoordinates(lambda: Degree(CAASun.GeometricEclipticLongitudeJ2000(self.julianDay.value, self.highPrecision)),
+                                         beta: Degree(CAASun.GeometricEclipticLatitudeJ2000(self.julianDay.value, self.highPrecision))) }
     }
     
     /// Computes the apparent horizontal coordinates of the Sun for a given location of the observer.
@@ -110,13 +109,13 @@ public class Sun: Object, CelestialBody {
     /// - Parameter geographicCoordinates: The location of the observer on Earth.
     /// - Returns: The topocentric equatorial coordinates.
     public func topocentricEquatorialCoordinates(for geographicCoordinates: GeographicCoordinates) -> EquatorialCoordinates {
-        let coords = KPCAAParallax_Equatorial2Topocentric(self.apparentEquatorialCoordinates.alpha.value,
-                                                          self.apparentEquatorialCoordinates.delta.value,
-                                                          self.radiusVector.value,
-                                                          geographicCoordinates.longitude.value,
-                                                          geographicCoordinates.latitude.value,
-                                                          geographicCoordinates.altitude.value,
-                                                          self.julianDay.value)
+        let coords = CAAParallax.Equatorial2Topocentric(self.apparentEquatorialCoordinates.alpha.value,
+                                                        self.apparentEquatorialCoordinates.delta.value,
+                                                        self.radiusVector.value,
+                                                        geographicCoordinates.longitude.value,
+                                                        geographicCoordinates.latitude.value,
+                                                        geographicCoordinates.altitude.value,
+                                                        self.julianDay.value)
         return EquatorialCoordinates(alpha: Hour(coords.X),
                                      delta: Degree(coords.Y),
                                      epoch: .epochOfTheDate(self.julianDay),
@@ -160,7 +159,7 @@ public class Sun: Object, CelestialBody {
     /// - Parameter C: The rotation number. C = 1 on November 9, 1853.
     /// - Returns: The julian day of the start of the cycle.
     public static func timeOfStartOfSynodicRotation(rotationNumber C: Int) -> JulianDay {
-        return JulianDay(KPCAAPhysicalSun_TimeOfStartOfRotation(C))
+        return JulianDay(CAAPhysicalSun.TimeOfStartOfRotation(Int(C)))
     }
     
     // MARK: - Equation of Time
@@ -170,16 +169,15 @@ public class Sun: Object, CelestialBody {
     ///
     /// - returns: The equation of time, in Minute.
     public func equationOfTime() -> Minute {
-        // KPCAA result is in minutes of time.
-        return Minute(KPCAAEquationOfTime_Calculate(self.julianDay.value, self.highPrecision))
+        // CAA result is in minutes of time.
+        return Minute(CAAEquationOfTime.Calculate(self.julianDay.value, self.highPrecision))
     }
     
     // MARK: - Elliptical (Planetary) Details Supplement
     
     /// AA+ provides computation for so-called elliptical planetary details also for the Sun
-    public lazy var planetaryDetails: KPCAAEllipticalPlanetaryDetails = {
-        [unowned self] in
-        return KPCAAElliptical_CalculatePlanetaryDetails(self.julianDay.value, KPCAAEllipticalObjectSUN, self.highPrecision)
-        }()
+    public var planetaryDetails: CAAEllipticalPlanetaryDetails {
+        return CAAElliptical.Calculate(self.julianDay.value, CAAElliptical.Object.SUN, self.highPrecision)
+    }
 }
 

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// Supported criteria for Islamic crescent moon (Hilal) visibility prediction.
 public enum CrescentVisibilityCriterion: String, CaseIterable, Sendable {

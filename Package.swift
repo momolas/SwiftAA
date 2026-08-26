@@ -48,15 +48,21 @@ let package = Package(
         // MARK: - Swift API
         .target(
             name: "SwiftAA",
-            dependencies: ["AABridge"],
+            dependencies: ["AAplus", "AABridge"],
             path: "Sources/SwiftAA",
-            exclude: ["SwiftAA-Info.plist"]
+            exclude: ["SwiftAA-Info.plist"],
+            swiftSettings: [
+                .interoperabilityMode(.Cxx)
+            ]
         ),
         .testTarget(
             name: "SwiftAATests",
             dependencies: ["SwiftAA"],
             path: "Tests/SwiftAATests",
-            exclude: ["SwiftAATests-Info.plist"]
+            exclude: ["SwiftAATests-Info.plist"],
+            swiftSettings: [
+                .interoperabilityMode(.Cxx)
+            ]
         )
     ],
     cxxLanguageStandard: .cxx17
