@@ -105,6 +105,33 @@ public class Sun: Object, CelestialBody {
         return self.apparentEquatorialCoordinates.makeHorizontalCoordinates(for: geographicCoordinates, at: self.julianDay)
     }
 
+    /// Computes the topocentric equatorial coordinates of the Sun (corrected for diurnal parallax).
+    ///
+    /// - Parameter geographicCoordinates: The location of the observer on Earth.
+    /// - Returns: The topocentric equatorial coordinates.
+    public func topocentricEquatorialCoordinates(for geographicCoordinates: GeographicCoordinates) -> EquatorialCoordinates {
+        let coords = KPCAAParallax_Equatorial2Topocentric(self.apparentEquatorialCoordinates.alpha.value,
+                                                          self.apparentEquatorialCoordinates.delta.value,
+                                                          self.radiusVector.value,
+                                                          geographicCoordinates.longitude.value,
+                                                          geographicCoordinates.latitude.value,
+                                                          geographicCoordinates.altitude.value,
+                                                          self.julianDay.value)
+        return EquatorialCoordinates(alpha: Hour(coords.X),
+                                     delta: Degree(coords.Y),
+                                     epoch: .epochOfTheDate(self.julianDay),
+                                     equinox: .meanEquinoxOfTheDate(self.julianDay))
+    }
+
+    /// Computes the topocentric horizontal coordinates of the Sun for a given observer location (corrected for diurnal parallax).
+    ///
+    /// - Parameter geographicCoordinates: The location of the observer on Earth.
+    /// - Returns: The topocentric horizontal coordinates (azimuth and altitude).
+    public func topocentricHorizontalCoordinates(for geographicCoordinates: GeographicCoordinates) -> HorizontalCoordinates {
+        let topoEqu = self.topocentricEquatorialCoordinates(for: geographicCoordinates)
+        return topoEqu.makeHorizontalCoordinates(for: geographicCoordinates, at: self.julianDay)
+    }
+
     // MARK: - Physical Observations of the Sun
     
     /// The position angle of the northern extremity of the axis of rotation,

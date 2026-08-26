@@ -154,7 +154,7 @@ class EarthTwilightsTests: XCTestCase {
         var earth = Earth(julianDay: JulianDay(year: 2017, month: 1, day: 30))
         var twilights = earth.twilights(forSunAltitude: TwilightSunAltitude.riseAndSet.rawValue, coordinates: north)
         XCTAssertNil(twilights.riseTime)
-        XCTAssertNil(twilights.transitTime)
+        XCTAssertNotNil(twilights.transitTime)
         XCTAssertNil(twilights.setTime)
         XCTAssertTrue(twilights.transitError == .alwaysBelowAltitude)
         
@@ -186,10 +186,8 @@ class EarthTwilightsTests: XCTestCase {
         earth = Earth(julianDay: JulianDay(year: 2017, month: 7, day: 30))
         twilights = earth.twilights(forSunAltitude: TwilightSunAltitude.riseAndSet.rawValue, coordinates: north)
         XCTAssertNil(twilights.riseTime)
-        XCTAssertNil(twilights.transitTime)
+        XCTAssertNotNil(twilights.transitTime)
         XCTAssertNil(twilights.setTime)
         XCTAssertTrue(twilights.transitError == .alwaysBelowAltitude)
     }
 }
-
-

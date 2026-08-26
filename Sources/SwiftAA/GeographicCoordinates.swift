@@ -35,7 +35,7 @@ public extension GeographicCoordinates {
 #endif
 
 /// The GeographicCoordinates object encompasses the basic elements of a location on Earth, including its altitude.
-public struct GeographicCoordinates {
+public struct GeographicCoordinates: Sendable {
     public let longitude: Degree
     public let latitude: Degree
     public let altitude: Meter

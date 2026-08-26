@@ -10,7 +10,7 @@ import Foundation
 import AABridge
 
 /// The RiseTransitSetTimesDetails struct encompasses all elements of the times of rise, transit and set.
-public struct RiseTransitSetTimesDetails {
+public struct RiseTransitSetTimesDetails: Sendable {
     public private(set) var isRiseValid: Bool
     public private(set) var riseTime: JulianDay
     public private(set) var isTransitValid: Bool
@@ -92,7 +92,7 @@ public func riseTransitSet(forJulianDay julianDay: JulianDay,
 
 
 /// Convenient class for storing the Rise, Transit and Set times of a celestial body.
-public struct RiseTransitSetTimes {
+public struct RiseTransitSetTimes: Sendable {
     private var details: RiseTransitSetTimesDetails? = nil
     public fileprivate(set) var transitError: CelestialBodyTransitError? = nil
     public fileprivate(set) var geographicCoordinates: GeographicCoordinates

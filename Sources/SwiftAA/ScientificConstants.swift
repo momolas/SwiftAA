@@ -47,7 +47,7 @@ public let AU2ly: Double = 1.0/206264.8
 
 
 /// Standard eqpoch values. Note: equinoxes are directions, epochs are point in time.
-public enum Epoch: CustomStringConvertible {
+public enum Epoch: CustomStringConvertible, Sendable {
     
     /// The mean epoch of the date.
     case epochOfTheDate(JulianDay)
@@ -87,7 +87,7 @@ public enum Epoch: CustomStringConvertible {
 /// The vernal equinox, which is the zero point of both right ascension and celestial longitude, is defined
 /// to be in the direction of the ascending node of the ecliptic on the equator.
 /// Of course, at the standard epoch of J2000 corresponds to a specific (and thus standard) equinox.
-public enum Equinox: CustomStringConvertible {
+public enum Equinox: CustomStringConvertible, Sendable {
     
     /// The mean equinox of the date is the intersection of the ecliptic of the date with the mean equator of the date.
     case meanEquinoxOfTheDate(JulianDay)
@@ -121,7 +121,7 @@ public enum Equinox: CustomStringConvertible {
 /// - summer: Summer
 /// - autumn: Autumn
 /// - winter: Winter
-public enum Season {
+public enum Season: Sendable {
     case spring
     case summer
     case autumn
@@ -135,7 +135,7 @@ public enum Season {
 /// - firstQuarter: First Quarter
 /// - full: Full Moon
 /// - lastQuarter: Last Quarter
-public enum MoonPhase {
+public enum MoonPhase: Sendable {
     case newMoon
     case firstQuarter
     case fullMoon
@@ -146,7 +146,7 @@ public enum MoonPhase {
 ///
 /// - alwaysBelowAltitude: The object is always below the given altitude.
 /// - alwaysAboveAltitude: The object is always above the given altitude.
-public enum CelestialBodyTransitError: Error {
+public enum CelestialBodyTransitError: Error, Sendable {
     case alwaysBelowAltitude
     case alwaysAboveAltitude
     case undefinedPlanetaryObject

@@ -24,12 +24,8 @@ let package = Package(
             name: "AAplus",
             path: "Sources/AA+",
             exclude: [
-                "naughter.css",
-                "CMakeLists.txt",
-                "AA+.htm",
                 "AAVSOP2013.h",
-                "AAVSOP2013.cpp",
-                "AATest.cpp"
+                "AAVSOP2013.cpp"
             ],
             publicHeadersPath: ".",
             cxxSettings: [

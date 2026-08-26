@@ -10,7 +10,7 @@ import Foundation
 import AABridge
 
 /// Struct to encapsulate amount of proper motion in equatorial reference.
-public struct ProperMotion {
+public struct ProperMotion: Sendable {
     public init(deltaRightAscension: Second, deltaDeclination: ArcSecond) {
         self.deltaRightAscension = deltaRightAscension
         self.deltaDeclination = deltaDeclination
@@ -23,7 +23,7 @@ public struct ProperMotion {
 }
 
 /// The coordinates of an object in the equatorial system, based on Earth equator.
-public struct EquatorialCoordinates: CustomStringConvertible {
+public struct EquatorialCoordinates: CustomStringConvertible, Sendable {
     
     /// The right ascension
     public let rightAscension: Hour
@@ -191,7 +191,7 @@ public struct EquatorialCoordinates: CustomStringConvertible {
 // MARK: -
 
 /// The coordinates in the ecliptic (a.k.a. celestial) system, based on solar-system planets orbital planes.
-public struct EclipticCoordinates: CustomStringConvertible {
+public struct EclipticCoordinates: CustomStringConvertible, Sendable {
     
     /// The celestial longitude
     public let celestialLongitude: Degree
@@ -285,7 +285,7 @@ public struct EclipticCoordinates: CustomStringConvertible {
 // MARK: -
 
 /// The coordinates of an object in the Milky Way galactic system.
-public struct GalacticCoordinates: CustomStringConvertible {
+public struct GalacticCoordinates: CustomStringConvertible, Sendable {
     
     /// The galactic longitude
     public let galacticLongitude: Degree
@@ -344,7 +344,7 @@ public struct GalacticCoordinates: CustomStringConvertible {
 // MARK: -
 
 /// The coordinates of an object as seen from an observer location on Earth.
-public struct HorizontalCoordinates: CustomStringConvertible {
+public struct HorizontalCoordinates: CustomStringConvertible, Sendable {
     /// The azimuth, westward from the South see AA. p91
     public let azimuth: Degree
     /// The altitude

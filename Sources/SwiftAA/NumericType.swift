@@ -12,10 +12,10 @@ import Foundation
 
 
 /// Base protocol for all numeric types of SwiftAA
-public protocol NumericType: _NumericType, SignedNumeric, Comparable, ExpressibleByFloatLiteral, Hashable { /* intentionally left blank */ }
+public protocol NumericType: _NumericType, SignedNumeric, Comparable, ExpressibleByFloatLiteral, Hashable, Sendable { /* intentionally left blank */ }
 
 // note: we use two separate protocols because it's impossible to declare conformance *and* provide default implementation at the same time 
-public protocol _NumericType: AdditiveArithmetic {
+public protocol _NumericType: AdditiveArithmetic, Sendable {
     var value: Double { get }
     init(_ value: Double)
     func rounded(toIncrement increment: Self, rule: FloatingPointRoundingRule) -> Self
