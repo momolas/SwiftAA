@@ -10,7 +10,7 @@ import Foundation
 import AAplus
 
 /// Struct to encapsulate amount of proper motion in equatorial reference.
-public struct ProperMotion: Sendable {
+public struct ProperMotion: Sendable, Codable, Hashable {
     public init(deltaRightAscension: Second, deltaDeclination: ArcSecond) {
         self.deltaRightAscension = deltaRightAscension
         self.deltaDeclination = deltaDeclination
@@ -23,7 +23,7 @@ public struct ProperMotion: Sendable {
 }
 
 /// The coordinates of an object in the equatorial system, based on Earth equator.
-public struct EquatorialCoordinates: CustomStringConvertible, Sendable {
+public struct EquatorialCoordinates: CustomStringConvertible, Sendable, Codable, Hashable {
     
     /// The right ascension
     public let rightAscension: Hour
@@ -191,7 +191,7 @@ public struct EquatorialCoordinates: CustomStringConvertible, Sendable {
 // MARK: -
 
 /// The coordinates in the ecliptic (a.k.a. celestial) system, based on solar-system planets orbital planes.
-public struct EclipticCoordinates: CustomStringConvertible, Sendable {
+public struct EclipticCoordinates: CustomStringConvertible, Sendable, Codable, Hashable {
     
     /// The celestial longitude
     public let celestialLongitude: Degree
@@ -285,7 +285,7 @@ public struct EclipticCoordinates: CustomStringConvertible, Sendable {
 // MARK: -
 
 /// The coordinates of an object in the Milky Way galactic system.
-public struct GalacticCoordinates: CustomStringConvertible, Sendable {
+public struct GalacticCoordinates: CustomStringConvertible, Sendable, Codable, Hashable {
     
     /// The galactic longitude
     public let galacticLongitude: Degree
@@ -344,7 +344,7 @@ public struct GalacticCoordinates: CustomStringConvertible, Sendable {
 // MARK: -
 
 /// The coordinates of an object as seen from an observer location on Earth.
-public struct HorizontalCoordinates: CustomStringConvertible, Sendable {
+public struct HorizontalCoordinates: CustomStringConvertible, Sendable, Codable, Hashable {
     /// The azimuth, westward from the South see AA. p91
     public let azimuth: Degree
     /// The altitude

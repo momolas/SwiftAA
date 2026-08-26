@@ -12,7 +12,7 @@ import Foundation
 
 
 /// Base protocol for all numeric types of SwiftAA
-public protocol NumericType: _NumericType, SignedNumeric, Comparable, ExpressibleByFloatLiteral, Hashable, Sendable { /* intentionally left blank */ }
+public protocol NumericType: _NumericType, SignedNumeric, Comparable, ExpressibleByFloatLiteral, Hashable, Sendable, Codable { /* intentionally left blank */ }
 
 // note: we use two separate protocols because it's impossible to declare conformance *and* provide default implementation at the same time 
 public protocol _NumericType: AdditiveArithmetic, Sendable {
@@ -48,6 +48,22 @@ extension _NumericType {
     public static func + (lhs: Self, rhs: Self) -> Self { return Self(lhs.value + rhs.value) }
     public static func - (lhs: Self, rhs: Self) -> Self { return Self(lhs.value - rhs.value) }
     public static func * (lhs: Self, rhs: Self) -> Self { return Self(lhs.value * rhs.value) }
+}
+
+extension _NumericType where Self: Codable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let val = try container.decode(Double.self)
+        self.init(val)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self.value)
+    }
+}
+
+extension _NumericType {
     public static func / (lhs: Self, rhs: Self) -> Self { return Self(lhs.value / rhs.value) }
     
     public static func += (lhs: inout Self, rhs: Self) { lhs = Self(lhs.value + rhs.value) }
@@ -64,7 +80,6 @@ extension _NumericType {
     #endif
     
 }
-
 
 public extension FloatingPoint {
     func positiveTruncatingRemainder(dividingBy other: Self) -> Self {

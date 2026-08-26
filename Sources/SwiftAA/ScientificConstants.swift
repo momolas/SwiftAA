@@ -47,7 +47,7 @@ public let AU2ly: Double = 1.0/206264.8
 
 
 /// Standard eqpoch values. Note: equinoxes are directions, epochs are point in time.
-public enum Epoch: CustomStringConvertible, Sendable {
+public enum Epoch: CustomStringConvertible, Sendable, Codable, Hashable {
     
     /// The mean epoch of the date.
     case epochOfTheDate(JulianDay)
@@ -87,7 +87,7 @@ public enum Epoch: CustomStringConvertible, Sendable {
 /// The vernal equinox, which is the zero point of both right ascension and celestial longitude, is defined
 /// to be in the direction of the ascending node of the ecliptic on the equator.
 /// Of course, at the standard epoch of J2000 corresponds to a specific (and thus standard) equinox.
-public enum Equinox: CustomStringConvertible, Sendable {
+public enum Equinox: CustomStringConvertible, Sendable, Codable, Hashable {
     
     /// The mean equinox of the date is the intersection of the ecliptic of the date with the mean equator of the date.
     case meanEquinoxOfTheDate(JulianDay)

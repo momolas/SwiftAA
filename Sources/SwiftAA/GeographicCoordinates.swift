@@ -35,7 +35,7 @@ public extension GeographicCoordinates {
 #endif
 
 /// The GeographicCoordinates object encompasses the basic elements of a location on Earth, including its altitude.
-public struct GeographicCoordinates: Sendable {
+public struct GeographicCoordinates: Sendable, Codable, Hashable {
     public let longitude: Degree
     public let latitude: Degree
     public let altitude: Meter
@@ -53,6 +53,18 @@ public struct GeographicCoordinates: Sendable {
     ///   - altitude: The optional altitude (default = 0).
     public init(positivelyWestwardLongitude longitude: Degree, latitude: Degree, altitude: Meter = 0) {
         self.longitude = longitude
+        self.latitude = latitude
+        self.altitude = altitude
+    }
+
+    /// Returns a GeographicCoordinates object from a standard (positively eastward) longitude.
+    ///
+    /// - Parameters:
+    ///   - eastLongitude: The (positively eastward) longitude.
+    ///   - latitude: The latitude
+    ///   - altitude: The optional altitude (default = 0).
+    public init(eastLongitude: Degree, latitude: Degree, altitude: Meter = 0) {
+        self.longitude = Degree(-eastLongitude.value)
         self.latitude = latitude
         self.altitude = altitude
     }
