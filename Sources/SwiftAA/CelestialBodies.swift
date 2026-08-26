@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// Basic properties of an orbiting object. Used by solar system planets, and the Earth' Moon, and the Sun.
 
@@ -107,33 +107,33 @@ public extension CelestialBody {
 
     func parallacticAngle(for geographicCoordinates: GeographicCoordinates) -> Degree {
         let lha = self.hourAngle(for: geographicCoordinates)
-        return Degree(KPCAAParallactic_ParallacticAngle(lha.value,
-                                                        geographicCoordinates.latitude.value,
-                                                        self.equatorialCoordinates.delta.value))
+        return Degree(CAAParallactic.ParallacticAngle(lha.value,
+                                                      geographicCoordinates.latitude.value,
+                                                      self.equatorialCoordinates.delta.value))
     }
     
     func eclipticLongitudeOnHorizon(for geographicCoordinates: GeographicCoordinates) -> Degree {
         let theta = self.julianDay.meanLocalSiderealTime(longitude: geographicCoordinates.longitude)
         let epsilon = self.julianDay.obliquityOfEcliptic(mean: false)
-        return Degree(KPCAAParallactic_EclipticLongitudeOnHorizon(theta.value,
-                                                                  epsilon.value,
-                                                                  geographicCoordinates.latitude.value))
+        return Degree(CAAParallactic.EclipticLongitudeOnHorizon(theta.value,
+                                                                epsilon.value,
+                                                                geographicCoordinates.latitude.value))
     }
     
     func angleBetweenEclipticAndHorizon(for geographicCoordinates: GeographicCoordinates) -> Degree {
         let theta = self.julianDay.meanLocalSiderealTime(longitude: geographicCoordinates.longitude)
         let epsilon = self.julianDay.obliquityOfEcliptic(mean: false)
-        return Degree(KPCAAParallactic_AngleBetweenEclipticAndHorizon(theta.value,
-                                                                      epsilon.value,
-                                                                      geographicCoordinates.latitude.value))
+        return Degree(CAAParallactic.AngleBetweenEclipticAndHorizon(theta.value,
+                                                                    epsilon.value,
+                                                                    geographicCoordinates.latitude.value))
     }
     
     func angleBetweenNorthCelestialPoleAndNorthPoleOfEcliptic(for geographicCoordinates: GeographicCoordinates) -> Degree {
         let epsilon = self.julianDay.obliquityOfEcliptic(mean: false)
         let eclipticCoords = self.equatorialCoordinates.makeEclipticCoordinates()
-        return Degree(KPCAAParallactic_AngleBetweenNorthCelestialPoleAndNorthPoleOfEcliptic(eclipticCoords.lambda.value,
-                                                                                            eclipticCoords.beta.value,
-                                                                                            epsilon.value))
+        return Degree(CAAParallactic.AngleBetweenNorthCelestialPoleAndNorthPoleOfEcliptic(eclipticCoords.lambda.value,
+                                                                                          eclipticCoords.beta.value,
+                                                                                          epsilon.value))
     }
 
     func makeHorizontalCoordinates(with geographicCoordinates: GeographicCoordinates) -> HorizontalCoordinates {

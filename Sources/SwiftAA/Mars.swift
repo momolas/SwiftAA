@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// The Mars planet.
 public class Mars: Planet, MarsPhysicalDetails {
 
     /// Accessor to all values of the underlying physical details. Will probably become private
     /// once all relevant accessors are implemented and covered.
-    public fileprivate(set) lazy var physicalDetails: KPCAAPhysicalMarsDetails = {
-        [unowned self] in
-        return KPCAAPhysicalMars_CalculateDetails(self.julianDay.value, self.highPrecision)
-        }()
+    public var physicalDetails: CAAPhysicalMarsDetails {
+        return CAAPhysicalMars.Calculate(self.julianDay.value, self.highPrecision)
+    }
 
     /// The average color of the Planet.
     public class override var averageColor: CelestialColor {

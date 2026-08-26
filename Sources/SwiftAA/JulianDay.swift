@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// The Julian Day is a continuous count of days and fractions thereof from the beginning of the year -4712.
 /// By tradition, the Julian Day begins at Greenwhich mean noon, that is, at 12h Universal Time.
@@ -35,10 +35,8 @@ public struct JulianDay: NumericType, CustomStringConvertible {
     ///   - minute: The minute of the date
     ///   - second: The second of the date. Precision goes to the nanosecond.
     public init(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0, second: Double = 0.0) {
-        let handle = KPCAADate_CreateWithDateTime(year, month, Double(day), Double(hour), Double(minute), second, true)
-        let julianValue: Double = KPCAADate_GetJulian(handle)
-        KPCAADate_Destroy(handle)
-        self.init(julianValue)
+        let aaDate = CAADate(year, month, Double(day), Double(hour), Double(minute), second, true)
+        self.init(aaDate.Julian())
     }
     
     /// Returns a Julian Day struct initialized from a given Gregorian calendar date, in the UT reference frame,
@@ -62,21 +60,20 @@ public struct JulianDay: NumericType, CustomStringConvertible {
 public extension JulianDay {
     /// Returns a new Date object, in the Gregorian calendar, corresponding to the Julian Day value.
     var date: Date {
-        let aaDate = KPCAADate_CreateWithJulianDay(value, true)
-        let decimalSeconds = KPCAADate_GetSecond(aaDate)
+        let aaDate = CAADate(value, true)
+        let decimalSeconds = aaDate.Second()
         let roundedSeconds = decimalSeconds.rounded(.towardZero)
         let nanoseconds = (decimalSeconds - roundedSeconds) * 1e9
-        let aaYear = KPCAADate_GetYear(aaDate)
+        let aaYear = Int(aaDate.Year())
         // the aaYear sequence is -2, -1, 0, 1, 2 while the Gregorian years are counted era0 2, era0 1, era1 1, era1 2
         let components = DateComponents(era: aaYear > 0 ? 1 : 0,
                                         year: aaYear > 0 ? aaYear : abs(1 - aaYear),
-                                        month: KPCAADate_GetMonth(aaDate),
-                                        day: KPCAADate_GetDay(aaDate),
-                                        hour: KPCAADate_GetHour(aaDate),
-                                        minute: KPCAADate_GetMinute(aaDate),
+                                        month: Int(aaDate.Month()),
+                                        day: Int(aaDate.Day()),
+                                        hour: Int(aaDate.Hour()),
+                                        minute: Int(aaDate.Minute()),
                                         second: Int(roundedSeconds),
                                         nanosecond: Int(nanoseconds))
-        KPCAADate_Destroy(aaDate)
         
         let date = Calendar.gregorianGMT.date(from: components)!
         return date
@@ -90,10 +87,8 @@ public extension JulianDay {
     /// and they expect a year 0 and not the 0-skip of the Gregorian calendar.
     /// This intermediate use of the Gregorian calendar in general instead of Julian Day is risky and most likely slow, but changing would require a lot of work.
     var year: Int {
-        let aaDate = KPCAADate_CreateWithJulianDay(value, true)
-        let aaYear = KPCAADate_GetYear(aaDate)
-        KPCAADate_Destroy(aaDate)
-        return aaYear
+        let aaDate = CAADate(value, true)
+        return Int(aaDate.Year())
     }
 
     /// Returns the so-called Modified Julian Day corresponding to the Julian Day value.
@@ -137,7 +132,7 @@ public extension JulianDay {
     ///
     /// - Returns: The sidereal time in hours.
     func meanGreenwichSiderealTime() -> Hour {
-        return Hour(KPCAASidereal_MeanGreenwichSiderealTime(self.value))
+        return Hour(CAASidereal.MeanGreenwichSiderealTime(self.value))
     }
     
     /// Computes the mean sidereal time for a given longitude on Earth.
@@ -157,7 +152,7 @@ public extension JulianDay {
     ///
     /// - Returns: The sidereal time in hours.
     func apparentGreenwichSiderealTime() -> Hour {
-        return Hour(KPCAASidereal_ApparentGreenwichSiderealTime(self.value))
+        return Hour(CAASidereal.ApparentGreenwichSiderealTime(self.value))
     }
     
     // Obliquity
@@ -167,7 +162,7 @@ public extension JulianDay {
     /// - Parameter mean: If true, compute the mean obliquity. Otherwise, compute the true obliquity.
     /// - Returns: The obliquity of the ecliptic, in degrees.
     func obliquityOfEcliptic(mean: Bool = true) -> Degree {
-        return Degree(KPCAANutation_ObliquityOfEcliptic(mean, self.value))
+        return Degree(mean ? CAANutation.MeanObliquityOfEcliptic(self.value) : CAANutation.TrueObliquityOfEcliptic(self.value))
     }
     
     // MARK: Dynamical Times
@@ -177,7 +172,7 @@ public extension JulianDay {
     ///
     /// - Returns: The number of seconds (and fraction of thereof) between TD and UT.
     func deltaT() -> Second {
-        return Second(KPCAADynamicalTime_DeltaT(self.value))
+        return Second(CAADynamicalTime.DeltaT(self.value))
     }
     
     /// Return the total of leap seconds added to the UTC since their introduction in 1972. 
@@ -185,7 +180,7 @@ public extension JulianDay {
     ///
     /// - Returns: The total number of leap seconds accumulated since their introduction until the given JD.
     func cumulativeLeapSeconds() -> Second {
-        return Second(KPCAADynamicalTime_CumulativeLeapSeconds(self.value))
+        return Second(CAADynamicalTime.CumulativeLeapSeconds(self.value))
     }
     
     /// Transform a Terrestrial Time (TT) value in a UTC (Coordinated Universal Time) one. UTC differs from 
@@ -195,7 +190,7 @@ public extension JulianDay {
     ///
     /// - Returns: A new julian day
     func TTtoUTC() -> JulianDay {
-        return JulianDay(KPCAADynamicalTime_TT2UTC(self.value))
+        return JulianDay(CAADynamicalTime.TT2UTC(self.value))
     }
 
     /// Transform a UTC (Universal Time Coordinates) value in a Terrestrial Time (TT) one. UTC differs from
@@ -205,7 +200,7 @@ public extension JulianDay {
     ///
     /// - Returns: A new julian day
     func UTCtoTT() -> JulianDay {
-        return JulianDay(KPCAADynamicalTime_UTC2TT(self.value))
+        return JulianDay(CAADynamicalTime.UTC2TT(self.value))
     }
 
     /// Transform a Terrestrial Time (TT) value in a TAI one. TAI is the International Atomic Time scale, 
@@ -214,7 +209,7 @@ public extension JulianDay {
     ///
     /// - Returns: A new julian day
     func TTtoTAI() -> JulianDay {
-        return JulianDay(KPCAADynamicalTime_TT2TAI(self.value))
+        return JulianDay(CAADynamicalTime.TT2TAI(self.value))
     }
 
     /// Transform a TAI value to a Terrestrial Time (TT) one. TAI is the International Atomic Time scale,
@@ -223,7 +218,7 @@ public extension JulianDay {
     ///
     /// - Returns: A new julian day
     func TAItoTT() -> JulianDay {
-        return JulianDay(KPCAADynamicalTime_TAI2TT(self.value))
+        return JulianDay(CAADynamicalTime.TAI2TT(self.value))
     }
 
     /// Transform a Terrestrial Time (TT) value in a UT1 one. Universal Time (UT) is counted from 0 hours at midnight, 
@@ -236,7 +231,7 @@ public extension JulianDay {
     ///
     /// - Returns: A new julian day
     func TTtoUT1() -> JulianDay {
-        return JulianDay(KPCAADynamicalTime_TT2UT1(self.value))
+        return JulianDay(CAADynamicalTime.TT2UT1(self.value))
     }
 
     /// Transform a UT1 value in a Terrestrial Time (TT) one. Universal Time (UT) is counted from 0 hours at midnight,
@@ -249,7 +244,7 @@ public extension JulianDay {
     ///
     /// - Returns: A new julian day
     func UT1toTT() -> JulianDay {
-        return JulianDay(KPCAADynamicalTime_UT12TT(self.value))
+        return JulianDay(CAADynamicalTime.UT12TT(self.value))
     }
 
     /// Computes the difference between UT1 and UTC. Not to be confused with Delta T.
@@ -257,7 +252,7 @@ public extension JulianDay {
     ///
     /// - Returns: A difference in Seconds.
     func UT1minusUTC() -> Second {
-        return Second(KPCAADynamicalTime_UT1MinusUTC(self.value))
+        return Second(CAADynamicalTime.UT1MinusUTC(self.value))
     }
     
     /// The description of the Julian Day.

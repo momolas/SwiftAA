@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// See AA p. 391. AA+ result is given in kilometers
 public func asteroidDiameter(magnitude: Magnitude, albedo: Double) -> Kilometer {
-    return Kilometer(KPCAADiameters_AsteroidDiameter(magnitude.value, albedo))
+    return Kilometer(CAADiameters.AsteroidDiameter(magnitude.value, albedo))
 }
 
 /// See AA p. 391. AA+ result is given in kilometers
 public func apparentAsteroidDiameter(magnitude: Magnitude, albedo: Double) -> ArcSecond {
-    return ArcSecond(KPCAADiameters_ApparentAsteroidDiameter(magnitude.value, albedo))
+    return ArcSecond(CAADiameters.ApparentAsteroidDiameter(magnitude.value, albedo))
 }

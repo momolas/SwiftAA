@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 public enum TwilightSunAltitude: Degree {
     case diskCenterOnGeometricHorizon = 0
@@ -51,18 +51,18 @@ public class Earth: Object, PlanetaryBase, PlanetaryOrbits {
     
     /// Accessor to all values of the underlying object details. Will probably become private
     /// once all relevant accessors are implemented and covered.
-    public var allObjectDetails: KPCAAEllipticalObjectDetails {
-        get { return KPCAAElliptical_CalculateObjectDetailsNoElements(self.julianDay.value, self.planetStrict, self.highPrecision) }
+    public var allObjectDetails: CAAEllipticalObjectDetails {
+        get { return calculateObjectDetailsNoElements(jd: self.julianDay.value, planetStrict: self.planetStrict, highPrecision: self.highPrecision) }
     }
     
     /// The longitude of the ascending node.
     public var longitudeOfAscendingNode: Degree {
-        get { return Degree(KPCAAElementsPlanetaryOrbit_LongitudeAscendingNodeJ2000(self.planetStrict, self.julianDay.value)) }
+        get { return Degree(orbitLongitudeAscendingNodeJ2000(self.planetStrict, jd: self.julianDay.value)) }
     }
     
     /// The mean anomaly (the Sun mean anomaly is the same as the Earth's one. See AA. p163.).
     public var meanAnomaly: Degree {
-        get { return Degree(KPCAAEarth_SunMeanAnomaly(self.julianDay.value)) }
+        get { return Degree(CAAEarth.SunMeanAnomaly(self.julianDay.value)) }
     }
     
     /**
@@ -77,9 +77,9 @@ public class Earth: Object, PlanetaryBase, PlanetaryOrbits {
         let year = self.julianDay.year
         switch equinoxType {
         case .northwardSpring:
-            return JulianDay(KPCAAEquinoxesAndSolstices_NorthwardEquinox(year, self.highPrecision))
+            return JulianDay(CAAEquinoxesAndSolstices.NorthwardEquinox(year, self.highPrecision))
         case .southwardSpring:
-            return JulianDay(KPCAAEquinoxesAndSolstices_SouthwardEquinox(year, self.highPrecision))
+            return JulianDay(CAAEquinoxesAndSolstices.SouthwardEquinox(year, self.highPrecision))
         }
     }
     
@@ -95,9 +95,9 @@ public class Earth: Object, PlanetaryBase, PlanetaryOrbits {
         let year = self.julianDay.year
         switch solsticeType {
         case .northernSummer:
-            return JulianDay(KPCAAEquinoxesAndSolstices_NorthernSolstice(year, self.highPrecision))
+            return JulianDay(CAAEquinoxesAndSolstices.NorthernSolstice(year, self.highPrecision))
         case .southernSummer:
-            return JulianDay(KPCAAEquinoxesAndSolstices_SouthernSolstice(year, self.highPrecision))
+            return JulianDay(CAAEquinoxesAndSolstices.SouthernSolstice(year, self.highPrecision))
         }
     }
     
@@ -113,13 +113,13 @@ public class Earth: Object, PlanetaryBase, PlanetaryOrbits {
         let year = self.julianDay.year
         switch season {
         case .spring:
-            return Day(KPCAAEquinoxesAndSolstices_LengthOfSpring(year, northernHemisphere, self.highPrecision))
+            return Day(CAAEquinoxesAndSolstices.LengthOfSpring(year, northernHemisphere, self.highPrecision))
         case .summer:
-            return Day(KPCAAEquinoxesAndSolstices_LengthOfSummer(year, northernHemisphere, self.highPrecision))
+            return Day(CAAEquinoxesAndSolstices.LengthOfSummer(year, northernHemisphere, self.highPrecision))
         case .autumn:
-            return Day(KPCAAEquinoxesAndSolstices_LengthOfAutumn(year, northernHemisphere, self.highPrecision))
+            return Day(CAAEquinoxesAndSolstices.LengthOfAutumn(year, northernHemisphere, self.highPrecision))
         case .winter:
-            return Day(KPCAAEquinoxesAndSolstices_LengthOfWinter(year, northernHemisphere, self.highPrecision))
+            return Day(CAAEquinoxesAndSolstices.LengthOfWinter(year, northernHemisphere, self.highPrecision))
         }
     }
     
@@ -143,7 +143,7 @@ public class Earth: Object, PlanetaryBase, PlanetaryOrbits {
     ///   - coordinates: The geographic coordinates for which to compute the twilights.
     /// - Returns: The rise, transit and set times, in Julian Day, and an error, if relevant.
     public func riseTransitSetTimes(for planetaryObject: KPCPlanetaryObject, geographicCoordinates: GeographicCoordinates) -> RiseTransitSetTimes {
-        guard planetaryObject != KPCPlanetaryObjectUNDEFINED else {
+        guard planetaryObject != .KPCPlanetaryObjectUNDEFINED else {
             return RiseTransitSetTimes(geographicCoordinates: geographicCoordinates, transitError: CelestialBodyTransitError.undefinedPlanetaryObject)
         }
         
@@ -160,8 +160,8 @@ public class Earth: Object, PlanetaryBase, PlanetaryOrbits {
     /// See AA pp.217 and following.
     public var heliocentricEclipticCoordinates: EclipticCoordinates {
         get {
-            let longitude = KPCAAEclipticalElement_EclipticLongitude(self.julianDay.value, self.planet, self.highPrecision)
-            let latitude = KPCAAEclipticalElement_EclipticLatitude(self.julianDay.value, self.planet, self.highPrecision)
+            let longitude = CAAEarth.EclipticLongitude(self.julianDay.value, self.highPrecision)
+            let latitude = CAAEarth.EclipticLatitude(self.julianDay.value, self.highPrecision)
             // Using standard epoch, thus standard value for the equinox, thus the mean obliquity.
             return EclipticCoordinates(lambda: Degree(longitude), beta: Degree(latitude))
         }

@@ -8,7 +8,6 @@
 
 import Foundation
 @_exported import AAplus
-import AABridge
 
 /// The Sun.
 public class Sun: Object, CelestialBody {

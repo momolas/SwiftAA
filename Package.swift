@@ -13,9 +13,7 @@ let package = Package(
     products: [
         // The C++ astronomical algorithms library by J.P. Naughter
         .library(name: "AAplus", targets: ["AAplus"]),
-        // The C bridge exposing AAplus functions to Swift
-        .library(name: "AABridge", targets: ["AABridge"]),
-        // The Swift wrapper API on top of the bridge
+        // The Swift wrapper API
         .library(name: "SwiftAA", targets: ["SwiftAA"])
     ],
     targets: [
@@ -33,22 +31,10 @@ let package = Package(
             ]
         ),
 
-        // MARK: - C Bridge
-        .target(
-            name: "AABridge",
-            dependencies: ["AAplus"],
-            path: "Sources/AABridge",
-            publicHeadersPath: "include"
-        ),
-        .testTarget(
-            name: "AABridgeTests",
-            dependencies: ["AABridge"]
-        ),
-
         // MARK: - Swift API
         .target(
             name: "SwiftAA",
-            dependencies: ["AAplus", "AABridge"],
+            dependencies: ["AAplus"],
             path: "Sources/SwiftAA",
             exclude: ["SwiftAA-Info.plist"],
             swiftSettings: [

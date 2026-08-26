@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 extension Earth {
     
@@ -16,7 +16,7 @@ extension Earth {
     /// perpendicular to the ecliptic. 
     /// Here it is that component along the ecliptic.
     public var nutationInLongitude: ArcSecond {
-        get { return ArcSecond(KPCAANutation_NutationInLongitude(self.julianDay.value)) }
+        get { return ArcSecond(CAANutation.NutationInLongitude(self.julianDay.value)) }
     }
     
     /// The nutation is a periodic oscillation of the rotational axis of the Earth around its "mean" position
@@ -24,18 +24,8 @@ extension Earth {
     /// perpendicular to the ecliptic.
     /// Here it is that component perpendicular to the ecliptic.
     public var nutationInObliquity: ArcSecond {
-        get { return ArcSecond(KPCAANutation_NutationInObliquity(self.julianDay.value)) }
+        get { return ArcSecond(CAANutation.NutationInObliquity(self.julianDay.value)) }
     }
-    
-    //public func nutationInRightAscension(julianDay: JulianDay) -> Double {
-    //    return KPCAANutation_NutationInObliquity(julianDay)
-    //}
-    //
-    
-    //public func nutationInDeclination(julianDay: JulianDay) -> Double {
-    //    return KPCAANutation_NutationInObliquity(julianDay)
-    //}
-    //
     
     /// AA p.147:
     /// The obliquity of the ecliptic, or inclination of the Earth's axis of rotation, is the angle between
@@ -46,7 +36,7 @@ extension Earth {
     /// If the _apparent_ right ascension and declination are used, that is
     /// affected by the aberration and the nutation, the true obliquity should be used.
     public func obliquityOfEcliptic(mean: Bool = true) -> Degree {
-        return Degree(KPCAANutation_ObliquityOfEcliptic(mean, self.julianDay.value))
+        return Degree(mean ? CAANutation.MeanObliquityOfEcliptic(self.julianDay.value) : CAANutation.TrueObliquityOfEcliptic(self.julianDay.value))
     }
 }
 

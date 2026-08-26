@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// Saturnicentric coordinates are centered on Saturn.
 public struct SaturnicentricCoordinates {
@@ -27,7 +27,7 @@ public struct SaturnicentricCoordinates {
 
 //// Saturn has many rings. Here we consider the ring system as a whole.
 public struct SaturnRingSystem {
-    fileprivate var details: KPCAASaturnRingDetails
+    fileprivate var details: CAASaturnRingDetails
     public fileprivate(set) var julianDay: JulianDay
     
     /// The Saturnicentric coordinates of the Earth referred to the plane of the ring (B)
@@ -59,7 +59,7 @@ public struct SaturnRingSystem {
     /// Creates a Saturn Ring system instance.
     ///
     /// - Parameter details: The details of the ring system.
-    init(_ details: KPCAASaturnRingDetails, julianDay: JulianDay) {
+    init(_ details: CAASaturnRingDetails, julianDay: JulianDay) {
         self.details = details
         self.julianDay = julianDay
     }

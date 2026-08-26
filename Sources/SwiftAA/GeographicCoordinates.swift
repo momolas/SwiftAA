@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 #if canImport(CoreLocation)
 import CoreLocation
@@ -64,18 +64,18 @@ public struct GeographicCoordinates: Sendable {
     ///
     /// - returns: The distance, in meters, between the two points, along Earth's surface.
     public func globeDistance(to otherCoordinates: GeographicCoordinates) -> Meter {
-        // KPCAA result is in kilometers.
-        return Meter(KPCAAGlobe_DistanceBetweenPoints(self.latitude.value,
-                                                      self.longitude.value,
-                                                      otherCoordinates.latitude.value,
-                                                      otherCoordinates.longitude.value) * 1000)
+        // CAA result is in kilometers.
+        return Meter(CAAGlobe.DistanceBetweenPoints(self.latitude.value,
+                                                    self.longitude.value,
+                                                    otherCoordinates.latitude.value,
+                                                    otherCoordinates.longitude.value) * 1000)
     }
     
     /// Returns the radius of the curvature of the Earth's meridian
     /// See AA p.82-83 Symbol: Rm
     public var globeRadiusOfCurvature: Meter {
         // Returned AA value is in kilometers.
-        get { return Meter(KPCAAGlobe_RadiusOfCurvature(self.latitude.value)*1000.0) }
+        get { return Meter(CAAGlobe.RadiusOfCurvature(self.latitude.value)*1000.0) }
     }
     
     /// Returns the radius of the circle made at a constant latitude
@@ -83,19 +83,19 @@ public struct GeographicCoordinates: Sendable {
     /// See AA p.82-83. Symbol: Rp
     public var globeRadiusOfParallelOfLatitude: Meter {
         // Returned AA value is in kilometers.
-        get { return Meter(KPCAAGlobe_RadiusOfParallelOfLatitude(self.latitude.value)*1000.0) }
+        get { return Meter(CAAGlobe.RadiusOfParallelOfLatitude(self.latitude.value)*1000.0) }
     }
     
     /// Note: rho is the observer's distance to center of the Earth (for an equatorial radius set to unity). 
     /// Theta (or phi) prime is the geocentric (not geographic) latitude. See AA p.81
     public func rhoSinThetaPrime(forObserverHeight height: Double) -> Double {
-        return KPCAAGlobe_RhoSinThetaPrime(self.latitude.value, height)
+        return CAAGlobe.RhoSinThetaPrime(self.latitude.value, height)
     }
     
     /// Note: rho is the observer's distance to center of the Earth (for an equatorial radius set to unity). 
     /// Theta (or phi) prime is the geocentric (not geographic) latitude. See AA p.81
     public func rhoCosThetaPrime(forObserverHeight height: Double) -> Double {
-        return KPCAAGlobe_RhoCosThetaPrime(self.latitude.value, height)
+        return CAAGlobe.RhoCosThetaPrime(self.latitude.value, height)
     }
 }
 

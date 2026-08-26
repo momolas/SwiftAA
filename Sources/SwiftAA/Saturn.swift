@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// The Saturn planet.
 public class Saturn: Planet {
@@ -39,7 +39,7 @@ public class Saturn: Planet {
     ///   - julianDay: The julian day at which the planet is considered.
     ///   - highPrecision: A boolean indicating whether high precision (VSOP87 theory) must be used. Default is true.
     public required init(julianDay: JulianDay, highPrecision: Bool = true) {
-        let details = KPCAASaturnMoonsDetails_Calculate(julianDay.value, highPrecision)
+        let details = CAASaturnMoons.Calculate(julianDay.value, highPrecision)
         self.Mimas = SaturnianMoon(name: "Mimas", details: details.Satellite1, synodicPeriod: 0.9425, visualMagnitude: 12.9, diameter: 400.0)
         self.Enceladus = SaturnianMoon(name: "Enceladus", details: details.Satellite2, synodicPeriod: 1.3704, visualMagnitude: 11.7, diameter: 498)
         self.Tethys = SaturnianMoon(name: "Tethys", details: details.Satellite3, synodicPeriod: 1.8881, visualMagnitude: 10.2, diameter: 1046.0)
@@ -49,7 +49,7 @@ public class Saturn: Planet {
         self.Hyperion = SaturnianMoon(name: "Hyperion", details: details.Satellite7, synodicPeriod: 21.3188, visualMagnitude: 14.2, diameter: 286.0)
         self.Iapetus = SaturnianMoon(name: "Iapetus", details: details.Satellite8, synodicPeriod: 79.9202, visualMagnitude: 10.2, diameter: 1460.0)
         
-        let ringDetails = KPCAASaturnRings_Calculate(julianDay.value, highPrecision)
+        let ringDetails = CAASaturnRings.Calculate(julianDay.value, highPrecision)
         self.ringSystem = SaturnRingSystem(ringDetails, julianDay: julianDay)
         
         super.init(julianDay: julianDay, highPrecision: highPrecision)
@@ -57,14 +57,14 @@ public class Saturn: Planet {
     
     /// The magnitude of the planet. Includes the contribution from the ring.
     public var magnitude: Magnitude {
-        get { return Magnitude(KPCAAIlluminatedFraction_SaturnMagnitudeAA(self.radiusVector.value,
+        get { return Magnitude(CAAIlluminatedFraction.SaturnMagnitudeAA(self.radiusVector.value,
                                                                 self.apparentGeocentricDistance.value,
                                                                 self.ringSystem.saturnicentricSunEarthLongitudesDifference.value,
                                                                 self.ringSystem.earthCoordinates.latitude.value)) } }
     
     /// The magnitude 'Muller' of the planet. Includes the contribution from the ring.
     public var magnitudeMuller: Magnitude {
-        get { return Magnitude(KPCAAIlluminatedFraction_SaturnMagnitudeMuller(self.radiusVector.value,
+        get { return Magnitude(CAAIlluminatedFraction.SaturnMagnitudeMuller(self.radiusVector.value,
                                                                     self.apparentGeocentricDistance.value,
                                                                     self.ringSystem.saturnicentricSunEarthLongitudesDifference.value,
                                                                     self.ringSystem.earthCoordinates.latitude.value)) } }

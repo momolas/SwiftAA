@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 public typealias MeanSolarYear = Double
 public typealias DecimalYear = Double
@@ -28,6 +28,16 @@ public struct BinaryStarOrbitalElements {
     public private(set) var positionAngleOfAscendingNode: Degree
     /// The longitude of the periastron.
     public private(set) var longitudeOfPeriastron: Degree
+    
+    public init(revolutionPeriod: MeanSolarYear, timeOfPeriastron: DecimalYear, eccentricity: Double, inclination: Degree, semiMajorAxis: Degree, positionAngleOfAscendingNode: Degree, longitudeOfPeriastron: Degree) {
+        self.revolutionPeriod = revolutionPeriod
+        self.timeOfPeriastron = timeOfPeriastron
+        self.eccentricity = eccentricity
+        self.inclination = inclination
+        self.semiMajorAxis = semiMajorAxis
+        self.positionAngleOfAscendingNode = positionAngleOfAscendingNode
+        self.longitudeOfPeriastron = longitudeOfPeriastron
+    }
     
     /// Convenience accessor for the orbital period.
     public var P: MeanSolarYear { get { return self.revolutionPeriod } }
@@ -54,6 +64,12 @@ public struct BinaryStarDetails {
     /// The angular distance
     public private(set) var angularDistance: ArcSecond
     
+    public init(radiusVector: ArcSecond, apparentPositionAngle: Degree, angularDistance: ArcSecond) {
+        self.radiusVector = radiusVector
+        self.apparentPositionAngle = apparentPositionAngle
+        self.angularDistance = angularDistance
+    }
+    
     /// Convenience accessor for the radius vector
     public var r: ArcSecond { get { return self.radiusVector } }
     /// Convenience accessor for the apparent position angle
@@ -70,14 +86,14 @@ public struct BinaryStarDetails {
 /// - Returns: The details of a binary star.
 public func binaryStarDetails(time: Double, elements: BinaryStarOrbitalElements) -> BinaryStarDetails {
     // Note the semiMajorAxis in expressed in arcseconds.
-    let details = KPCAABinaryStar_CalculateDetails(time,
-                                                   elements.P,
-                                                   elements.T,
-                                                   elements.e,
-                                                   elements.a.inArcSeconds.value,
-                                                   elements.i.value,
-                                                   elements.Omega.value,
-                                                   elements.w.value)
+    let details = CAABinaryStar.Calculate(time,
+                                          elements.P,
+                                          elements.T,
+                                          elements.e,
+                                          elements.a.inArcSeconds.value,
+                                          elements.i.value,
+                                          elements.Omega.value,
+                                          elements.w.value)
     
     return BinaryStarDetails(radiusVector: ArcSecond(details.r),
                              apparentPositionAngle: Degree(details.Theta),
@@ -92,5 +108,5 @@ public func binaryStarDetails(time: Double, elements: BinaryStarOrbitalElements)
 ///   - omega: The longitude of periastron
 /// - Returns: The apparent eccentricity of the orbit, as seen on the sky.
 public func binaryStarApparentEccentricity(eccentricity: Double, inclination: Degree, omega: Degree) -> Double {
-    return KPCAABinaryStar_ApparentEccentricity(eccentricity, inclination.value, omega.value)
+    return CAABinaryStar.ApparentEccentricity(eccentricity, inclination.value, omega.value)
 }

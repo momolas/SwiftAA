@@ -60,6 +60,7 @@ public:
     STATION1,
     STATION2
   };
+  using EventType = Type;
 
 //Static methods
   static double K(double Year, Planet planet, Type type) noexcept;

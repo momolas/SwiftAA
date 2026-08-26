@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// The Planet class encompasses all the shared properties of the planets, to be understood as "non-Earth" 
 /// and "non-dwarf" planets.
@@ -20,14 +20,14 @@ public class Planet: Object, CelestialBody, PlanetaryDetails, PlanetaryPhenomena
         
     /// Accessor to all values of the underlying elliptical planetary details. Will probably become private
     /// once all relevant accessors are implemented and covered.
-    public var allPlanetaryDetails: KPCAAEllipticalPlanetaryDetails {
-        get { return KPCAAElliptical_CalculatePlanetaryDetails(self.julianDay.value, self.ellipticalObject, self.highPrecision) }
+    public var allPlanetaryDetails: CAAEllipticalPlanetaryDetails {
+        get { return CAAElliptical.Calculate(self.julianDay.value, toEllipticalObject(self.ellipticalObject), self.highPrecision) }
     }
     
     /// Accessor to all values of the underlying object details. Will probably become private
     /// once all relevant accessors are implemented and covered.
-    public var allObjectDetails: KPCAAEllipticalObjectDetails {
-        get { return KPCAAElliptical_CalculateObjectDetailsNoElements(self.julianDay.value, self.planetStrict, self.highPrecision) }
+    public var allObjectDetails: CAAEllipticalObjectDetails {
+        get { return calculateObjectDetailsNoElements(jd: self.julianDay.value, planetStrict: self.planetStrict, highPrecision: self.highPrecision) }
     }
     
     
@@ -42,8 +42,8 @@ public class Planet: Object, CelestialBody, PlanetaryDetails, PlanetaryPhenomena
     /// It accounts for 1) the effect of light-time and 2) the effect of the Earth motion. See AA p224.
     public var heliocentricEclipticCoordinates: EclipticCoordinates {
         get {
-            let longitude = KPCAAEclipticalElement_EclipticLongitude(self.julianDay.value, self.planet, self.highPrecision)
-            let latitude = KPCAAEclipticalElement_EclipticLatitude(self.julianDay.value, self.planet, self.highPrecision)
+            let longitude = planetEclipticLongitude(self.planet, jd: self.julianDay.value, highPrecision: self.highPrecision)
+            let latitude = planetEclipticLatitude(self.planet, jd: self.julianDay.value, highPrecision: self.highPrecision)
             // Using standard epoch, thus standard value for the equinox, thus the mean obliquity.
             return EclipticCoordinates(lambda: Degree(longitude), beta: Degree(latitude))
         }
@@ -51,7 +51,7 @@ public class Planet: Object, CelestialBody, PlanetaryDetails, PlanetaryPhenomena
     
     /// The radius vector of the planet (that is, its distance to the Sun).
     public var radiusVector: AstronomicalUnit {
-        get { return AstronomicalUnit(KPCAAEclipticalElement_RadiusVector(self.julianDay.value, self.planet, self.highPrecision)) }
+        get { return AstronomicalUnit(planetRadiusVector(self.planet, jd: self.julianDay.value, highPrecision: self.highPrecision)) }
     }
         
     /// the standard altitude of the planet, that is, the geometric altitude of the center of the body at the time
@@ -67,8 +67,8 @@ public class DwarfPlanet: Object, PlanetaryOrbits {
         
     /// Accessor to all values of the underlying object details. Will probably become private
     /// once all relevant accessors are implemented and covered.
-    public var allObjectDetails: KPCAAEllipticalObjectDetails {
-        get { return KPCAAElliptical_CalculateObjectDetailsNoElements(self.julianDay.value, self.planetStrict, self.highPrecision) }
+    public var allObjectDetails: CAAEllipticalObjectDetails {
+        get { return calculateObjectDetailsNoElements(jd: self.julianDay.value, planetStrict: self.planetStrict, highPrecision: self.highPrecision) }
     }
 }
 

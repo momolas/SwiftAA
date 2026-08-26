@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// The Degree is a unit of angle.
 public struct Degree: NumericType, CustomStringConvertible {
@@ -142,7 +142,7 @@ public struct ArcSecond: NumericType, CustomStringConvertible {
     ///
     /// - Returns: The distance of the object.
     public func distanceFromEquatorialHorizontalParallax() -> AstronomicalUnit {
-        return AstronomicalUnit(KPCAAParallax_ParallaxToDistance(inDegrees.value))
+        return AstronomicalUnit(CAAParallax.ParallaxToDistance(inDegrees.value))
     }
 
     public var description: String { return String(format: "%.2f arcsec", value) }

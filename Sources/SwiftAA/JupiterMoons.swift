@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 public typealias JupiterEquatorialRadius = Double
 
@@ -23,16 +23,16 @@ public struct GalileanMoonRectangularCoordinates {
     public fileprivate(set) var Y: JupiterEquatorialRadius
     public fileprivate(set) var Z: Double
     
-    init(components: KPCAA3DCoordinateComponents) {
-        self.X = components.X
-        self.Y = components.Y
-        self.Z = components.Z
+    init(coordinates: CAA3DCoordinate) {
+        self.X = coordinates.X
+        self.Y = coordinates.Y
+        self.Z = coordinates.Z
     }
 }
 
 /// The GalileanMoon struct encompasses all properties of Galilean moons
 public struct GalileanMoon {
-    fileprivate var details: KPCAAGalileanMoonDetails
+    fileprivate var details: CAAGalileanMoonDetail
 
     /// The name of the Moon
     public var name: String
@@ -45,31 +45,30 @@ public struct GalileanMoon {
     public var radiusVector: AstronomicalUnit { get { return AstronomicalUnit(self.details.r) } }
 
     /// Returns whether the Moon is in transit or not (i.e. in front of Jupiter disk).
-    public var inTransit: Bool { get { return self.details.inTransit } }
+    public var inTransit: Bool { get { return self.details.bInTransit } }
     
     /// Returns whether the Moon is in occultation or not (i.e. behind the Jupiter disk).
-    public var inOccultation: Bool { get { return self.details.inOccultation } }
+    public var inOccultation: Bool { get { return self.details.bInOccultation } }
 
     /// Returns whether the Moon is eclipsing Jupiter.
-    public var inEclipse: Bool { get { return self.details.inEclipse } }
+    public var inEclipse: Bool { get { return self.details.bInEclipse } }
     
     /// Returns whether the Moon is eclipsed by Jupiter.
-    public var inShadowTransit: Bool { get { return self.details.inShadowTransit } }
+    public var inShadowTransit: Bool { get { return self.details.bInShadowTransit } }
 
     /// Returns a GalileanMoon object
     ///
     /// - Parameters:
     ///   - name: the name of the Moon
     ///   - details: the details of the moon. See Jupiter class.
-    init(name: String, details: KPCAAGalileanMoonDetails) {
+    init(name: String, details: CAAGalileanMoonDetail) {
         self.name = name
         self.details = details
     }
 
-    // TODO: Improve this by not returning KPCAA3DCoordinateComponents and also add doc.
     public func rectangularCoordinates(_ apparent: Bool = true) -> GalileanMoonRectangularCoordinates {
-        let components = (apparent == true) ? self.details.ApparentRectangularCoordinateComponents : self.details.TrueRectangularCoordinateComponents
-        return GalileanMoonRectangularCoordinates(components: components)
+        let coordinates = (apparent == true) ? self.details.ApparentRectangularCoordinates : self.details.TrueRectangularCoordinates
+        return GalileanMoonRectangularCoordinates(coordinates: coordinates)
     }
 }
 

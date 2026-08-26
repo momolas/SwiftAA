@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// The GalileanMoon struct encompasses all properties of Galilean moons
 /// Saturnian Moons are a world by themselves! We'll consider the 7 most important for now.
@@ -25,7 +25,7 @@ import AABridge
 /// Additional data can be taken from this source (referenced by Wikipedia):
 /// http://nssdc.gsfc.nasa.gov/planetary/factsheet/saturniansatfact.html
 public struct SaturnianMoon {
-    fileprivate var details: KPCAASaturnMoonDetails
+    fileprivate var details: CAASaturnMoonDetail
 
     /// The name of the Moon
     public var name: String
@@ -40,16 +40,16 @@ public struct SaturnianMoon {
     public var diameter: Kilometer
 
     /// Returns whether the Moon is in transit or not (i.e. in front of Jupiter disk).
-    public var inTransit: Bool { get { return self.details.inTransit } }
+    public var inTransit: Bool { get { return self.details.bInTransit } }
     
     /// Returns whether the Moon is in occultation or not (i.e. behind the Jupiter disk).
-    public var inOccultation: Bool { get { return self.details.inOccultation } }
+    public var inOccultation: Bool { get { return self.details.bInOccultation } }
     
     /// Returns whether the Moon is eclipsing Jupiter.
-    public var inEclipse: Bool { get { return self.details.inEclipse } }
+    public var inEclipse: Bool { get { return self.details.bInEclipse } }
     
     /// Returns whether the Moon is eclipsed by Jupiter.
-    public var inShadowTransit: Bool { get { return self.details.inShadowTransit } }
+    public var inShadowTransit: Bool { get { return self.details.bInShadowTransit } }
 
     
     /// Returns a SaturnianMoon object.
@@ -57,7 +57,7 @@ public struct SaturnianMoon {
     /// - Parameters:
     ///   - name: The name of the Moon.
     ///   - details: The details of the Moon.
-    init(name: String, details: KPCAASaturnMoonDetails, synodicPeriod: Day, visualMagnitude: Magnitude, diameter: Kilometer) {
+    init(name: String, details: CAASaturnMoonDetail, synodicPeriod: Day, visualMagnitude: Magnitude, diameter: Kilometer) {
         self.name = name
         self.details = details
         self.synodicPeriod = synodicPeriod
@@ -65,8 +65,9 @@ public struct SaturnianMoon {
         self.diameter = diameter
     }
 
-    public func rectangularCoordinates(_ apparent: Bool = true) -> KPCAA3DCoordinateComponents {
-        return (apparent == true) ? self.details.ApparentRectangularCoordinateComponents : self.details.TrueRectangularCoordinateComponents
+    public func rectangularCoordinates(_ apparent: Bool = true) -> (X: Double, Y: Double, Z: Double) {
+        let coords = (apparent == true) ? self.details.ApparentRectangularCoordinates : self.details.TrueRectangularCoordinates
+        return (coords.X, coords.Y, coords.Z)
     }
 }
 

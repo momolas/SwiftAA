@@ -7,7 +7,6 @@
 //
 
 import XCTest
-import AABridge
 @testable import SwiftAA
 
 class ConstantsTests: XCTestCase {

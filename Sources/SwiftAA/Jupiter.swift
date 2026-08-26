@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// The Jupiter planet.
 public class Jupiter: Planet, JupiterPhysicalDetails {
     
     /// Accessor to all values of the underlying physical details. Will probably become private
     /// once all relevant accessors are implemented and covered.
-    public fileprivate(set) lazy var physicalDetails: KPCAAPhysicalJupiterDetails = {
-        [unowned self] in
-        return KPCAAPhysicalJupiter_CalculateDetails(self.julianDay.value, self.highPrecision)
-        }()
+    public var physicalDetails: CAAPhysicalJupiterDetails {
+        return CAAPhysicalJupiter.Calculate(self.julianDay.value, self.highPrecision)
+    }
     
     /// The average color of the planet.
     public class override var averageColor: CelestialColor {
@@ -34,7 +33,7 @@ public class Jupiter: Planet, JupiterPhysicalDetails {
     }
 
     public required init(julianDay: JulianDay, highPrecision: Bool = true) {
-        let details = KPCAAGalileanMoons_CalculateDetails(julianDay.value, highPrecision)
+        let details = CAAGalileanMoons.Calculate(julianDay.value, highPrecision)
         self.Io = GalileanMoon(name: "Io", details: details.Satellite1)
         self.Europa = GalileanMoon(name: "Europa", details: details.Satellite2)
         self.Ganymede = GalileanMoon(name: "Ganymede", details: details.Satellite3)
@@ -44,9 +43,9 @@ public class Jupiter: Planet, JupiterPhysicalDetails {
     }
 
     public var magnitude: Double {
-        get { return KPCAAIlluminatedFraction_JupiterMagnitudeAA(self.radiusVector.value,
-                                                                 self.apparentGeocentricDistance.value,
-                                                                 self.phaseAngle.value) }
+        get { return CAAIlluminatedFraction.JupiterMagnitudeAA(self.radiusVector.value,
+                                                               self.apparentGeocentricDistance.value,
+                                                               self.phaseAngle.value) }
     }
 
     // MARK: - PlanetaryPhysicalDetails

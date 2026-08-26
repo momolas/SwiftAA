@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 /// The AstronomicalUnit is a unit of distance.
 public struct AstronomicalUnit: NumericType, CustomStringConvertible {
@@ -36,7 +36,7 @@ public struct AstronomicalUnit: NumericType, CustomStringConvertible {
     ///
     /// - Returns: The parallax value.
     public func equatorialHorizontalParallax() -> ArcSecond {
-        return Degree(KPCAAParallax_DistanceToParallax(value)).inArcSeconds
+        return Degree(CAAParallax.DistanceToParallax(value)).inArcSeconds
     }
 
     public var description: String { return String(format: "%.2f AU", value) }

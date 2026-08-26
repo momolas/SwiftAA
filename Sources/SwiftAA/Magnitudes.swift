@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AABridge
+import AAplus
 
 public extension Magnitude {
     /// Combine two magnitudes.
@@ -15,7 +15,7 @@ public extension Magnitude {
     /// - Parameter m2: The secondary magnitude
     /// - Returns: The combined magnitude.
     func combine(with m2: Magnitude) -> Magnitude {
-        return Magnitude(KPCAAStellarMagnitudes_CombinedMagnitude(self.value, m2.value))
+        return Magnitude(CAAStellarMagnitudes.CombinedMagnitude(self.value, m2.value))
     }
     
     /// Compute the brightness ratio, for a given secondary magnitude.
@@ -23,7 +23,7 @@ public extension Magnitude {
     /// - Parameter m2: The other magnitude.
     /// - Returns: The brightness ratio.
     func brightnessRatio(with m2: Magnitude) -> Double {
-        return KPCAAStellarMagnitudes_BrightnessRatio(self.value, m2.value)
+        return CAAStellarMagnitudes.BrightnessRatio(self.value, m2.value)
     }
 
     /// Compute the geometrical distance, in parsec, for the current apparent magnitude.
@@ -41,6 +41,6 @@ public extension Magnitude {
     /// - Parameter r: The brightness ratio.
     /// - Returns: The magnitude difference.
     static func magnitudeDifference(forBrightnessRatio r: Double) -> Magnitude {
-        return Magnitude(KPCAAStellarMagnitudes_MagnitudeDifference(r))
+        return Magnitude(CAAStellarMagnitudes.MagnitudeDifference(r))
     }
 }
